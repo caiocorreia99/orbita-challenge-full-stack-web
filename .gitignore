@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+/API/Student Portal API/obj
+/API/Student Portal API/.vs/Student Portal API
+/API/Student.Portal.Models/obj
