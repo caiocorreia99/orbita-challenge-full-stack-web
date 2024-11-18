@@ -14,7 +14,9 @@ namespace Student.Portal.Models.DataBase
         {
         }
 
+
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Students> Students { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,7 +24,11 @@ namespace Student.Portal.Models.DataBase
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.IdUser);
+            });
 
+            modelBuilder.Entity<Students>(entity =>
+            {
+                entity.HasKey(e => e.IdStudent);
             });
 
         }

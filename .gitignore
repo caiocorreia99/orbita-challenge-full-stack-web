@@ -110,3 +110,5 @@ dist
 /API/.vs/API/DesignTimeBuild
 /API/.vs/API/FileContentIndex
 /API/.vs/API/v17
+/API/Student.Portal.Models/bin/Debug/net8.0
+/API/Student Portal API/bin/Debug/net8.0

@@ -73,6 +73,7 @@ builder.Services.AddSingleton(databaseOptions.Options);
 builder.Services.AddSingleton<IDatabaseFactory<DatabaseConnection>, DatabaseFactory<DatabaseConnection>>();
 builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IStudentService, StudentService>();
 
 // Add Business Logice Services
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();

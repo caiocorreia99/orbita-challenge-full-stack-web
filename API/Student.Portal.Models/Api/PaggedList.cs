@@ -8,6 +8,11 @@
         public int TotalCount { get; set; }
         public List<T> Items { get; set; }
 
+        public PaggedList()
+        {
+
+        }
+
         public PaggedList(int page, int size, int pageRange, int totalCount, List<T> items)
         {
             this.Page = page;

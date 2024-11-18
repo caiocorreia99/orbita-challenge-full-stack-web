@@ -13,6 +13,7 @@ namespace Student_Portal_API.Controllers.v1.Controllers
     [Route(Constants.UserRoute)]
     public class UserController : ControllerBase
     {
+
         private readonly IUserService userService;
 
         public UserController(IUserService UserService)

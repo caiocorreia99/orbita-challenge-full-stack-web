@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Student.Portal.Models.Api;
 using Student.Portal.Models.Binder;
 using Student.Portal.Models.DataBase;
 using Student_Portal_API.Controllers.v1.Interface;
 using Student_Portal_API.Controllers.v1.Model;
 using Student_Portal_API.Helpers;
-using LoginRequest = Student.Portal.Models.Binder.LoginRequest;
 
 namespace Student_Portal_API.Controllers.v1.Services
 {
