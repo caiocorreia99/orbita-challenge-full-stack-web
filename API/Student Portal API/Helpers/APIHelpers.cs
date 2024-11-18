@@ -1,10 +1,13 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Student_Portal_API.Helpers
 {
     public class APIHelper
     {
+
+        private static Regex MailRegex = new(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,})+)$");
 
         public static string EncryptSHA256(string plainText)
         {
@@ -15,6 +18,30 @@ namespace Student_Portal_API.Helpers
             return hash;
         }
 
+        public static string GenerateRandomPassword(int len = 8, string cypherPass = null)
+        {
+            if (len < 2) len = 2;
+
+            if (string.IsNullOrEmpty(cypherPass))
+            {
+                throw new InvalidOperationException("CypherPass was not passed");
+            }
+
+            string baseString = Guid.NewGuid().ToString("d");
+            string generatedString = EncryptAES(baseString, cypherPass);
+
+            return generatedString[..len];
+        }
+
+        public static bool ValidMail(string mail)
+        {
+            if (string.IsNullOrEmpty(mail))
+            {
+                return false;
+            }
+
+            return MailRegex.Match(mail).Success;
+        }
 
         public static string EncryptAES(string plainText, string passPhrase)
         {
@@ -77,20 +104,7 @@ namespace Student_Portal_API.Helpers
 
             var bytes = Convert.FromBase64String(text64);
             return Encoding.UTF8.GetString(bytes);
-        }
-
-        public static string GetComplexMessage(int passwordLen)
-        {
-            return $"<div style='text-align: left; list-style-position: inside'><ul>" +
-                    $"<p>Password provided is not complex enough</p>" +
-                    $"<p>Requirements:<p>" +
-                    $"<li>Do not have blank space;</li>" +
-                    $"<li>Minimum size: {passwordLen} characters;</li>" +
-                    $"<li>have number;</li>" +
-                    $"<li>have handwriting;</li>" +
-                    $"<li>have special character;</li>" +
-                    $"</ul></div>";
-        }
+        }        
 
     }
 }
