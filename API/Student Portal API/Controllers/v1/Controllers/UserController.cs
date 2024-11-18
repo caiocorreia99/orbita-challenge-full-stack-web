@@ -8,12 +8,11 @@ using Student_Portal_API.Helpers;
 
 namespace Student_Portal_API.Controllers.v1.Controllers
 {
-    [Authorize]
+    
     [ApiController]
     [Route(Constants.UserRoute)]
     public class UserController : ControllerBase
     {
-
         private readonly IUserService userService;
 
         public UserController(IUserService UserService)
@@ -21,7 +20,9 @@ namespace Student_Portal_API.Controllers.v1.Controllers
             userService = UserService;
         }
 
+        [Authorize]
         [HttpGet]
+        [Route(Constants.UserRoute + "/get-user")]
         public async Task<ApiResponse<List<UserResponse>>> Get([FromQuery] int idUser)
         {
             try
@@ -36,7 +37,9 @@ namespace Student_Portal_API.Controllers.v1.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost]
+        [Route(Constants.UserRoute + "/create-user")]
         public async Task<ApiResponse<Response>> Post([FromBody] UserRequest userRequest)
         {
             try
