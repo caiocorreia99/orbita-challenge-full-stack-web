@@ -52,7 +52,7 @@ namespace Student_Portal_API.Controllers.v1.Services
             if (!string.IsNullOrEmpty(search))
                 query = query.Where(m => m.Name.Contains(search) || m.Email.Contains(search) || m.RA.ToString().Contains(search));
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.Where(s => s.Active != false).CountAsync();
             if (pageSize == 0) pageSize = totalCount;
             var pageRange = (int)Math.Ceiling(totalCount / (decimal)pageSize);
 
@@ -60,6 +60,7 @@ namespace Student_Portal_API.Controllers.v1.Services
                     .OrderBy(s => s.Name)
                     .Skip(pageSize * (page - 1))
                     .Take(pageSize)
+                    .Where(s => s.Active != false)
                     .ToListAsync();
 
             return new PaggedList<Students>(page, pageSize, pageRange, totalCount, result);
