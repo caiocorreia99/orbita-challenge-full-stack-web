@@ -63,7 +63,7 @@ namespace Student_Portal_API.Controllers.v1.Services
                 throw new Exception("Invalid Email");
 
             var request = await db.User.FirstOrDefaultAsync(u => u.Email == userRequest.Email);
-            if (request != null) throw new Exception($"Email {userRequest.Email} already in  use");
+            if (request != null) throw new Exception($"Email already in use");
 
 
             string passEncrypted = APIHelper.EncryptAES(userRequest.Password, env.CypherPass);

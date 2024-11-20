@@ -25,16 +25,16 @@ namespace Student_Portal_API.Controllers.v1.Controllers
         
         [HttpGet]
         [Route(Constants.StudentRoute + "/get-student")]
-        public async Task<ApiResponse<List<StudentResponse>>> Get([FromQuery] int idStudent)
+        public async Task<ApiResponse<StudentResponse>> Get([FromQuery] int idStudent)
         {
             try
             {
                 var result = await studentService.GetStudent(idStudent);
-                return ApiResponse<List<StudentResponse>>.GetSuccessResponse(data: result);
+                return ApiResponse<StudentResponse>.GetSuccessResponse(data: result);
             }
             catch (Exception ex)
             {
-                return ApiResponse<List<StudentResponse>>.GetErrorResponse(InternalCode.Catch_Generic, System.Net.HttpStatusCode.InternalServerError, ex.Message, ex); ;
+                return ApiResponse<StudentResponse>.GetErrorResponse(InternalCode.Catch_Generic, System.Net.HttpStatusCode.InternalServerError, ex.Message, ex); ;
             }
         }
         

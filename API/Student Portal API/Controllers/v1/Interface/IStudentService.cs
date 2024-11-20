@@ -6,8 +6,8 @@ namespace Student_Portal_API.Controllers.v1.Interface
 {
     public interface IStudentService
     {
-        Task<List<StudentResponse>> GetStudent(int idStudent);
-        Task<PaggedList<Students>> ListStudent(int page, int pageSize, string? name = null);
+        Task<StudentResponse> GetStudent(int idStudent);
+        Task<PaggedList<Students>> ListStudent(int page, int pageSize, string? search = null);
         Task UpdateStudent(StudentRequest studentRequest);
         Task DisableStudent(int idStudent);
         Task CreateStudent(StudentRequest studentRequest);

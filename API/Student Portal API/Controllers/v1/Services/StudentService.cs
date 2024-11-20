@@ -25,46 +25,39 @@ namespace Student_Portal_API.Controllers.v1.Services
             this.env = env.Value;
         }
 
-        public async Task<List<StudentResponse>> GetStudent(int IdStudent)
+        public async Task<StudentResponse> GetStudent(int IdStudent)
         {
             using var db = databaseFactory.Create();
 
-            var result = await db.Students.OrderBy(s => s.IdStudent).Where(m => m.IdStudent == IdStudent).ToListAsync();
+            var result = await db.Students.FirstOrDefaultAsync(m => m.IdStudent == IdStudent);
 
-            var studentResponse = new List<StudentResponse>();
-
-            result.ForEach(student =>
-            {
-                studentResponse.Add(new StudentResponse
-                {
-                    IdStudent = student.IdStudent,
-                    Name = student.Name,
-                    Email = student.Email,
-                    Active = student.Active,
-                    CPF = student.CPF,
-                    RA = student.RA,
-                    LastLogin = DateTime.Now,
-                });
-            });
+            var studentResponse = new StudentResponse {
+                IdStudent = result.IdStudent,
+                Name = result.Name,
+                Email = result.Email,
+                Active = result.Active,
+                CPF = result.CPF,
+                RA = result.RA                
+            };
 
             return studentResponse;
         }
 
-        public async Task<PaggedList<Students>> ListStudent(int page, int pageSize, string? name = null)
+        public async Task<PaggedList<Students>> ListStudent(int page, int pageSize, string? search = null)
         {
             using var db = databaseFactory.Create();
 
             IQueryable<Students> query = db.Students;
 
-            if (!string.IsNullOrEmpty(name))
-                query = query.Where(m => m.Name.Contains(name));
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(m => m.Name.Contains(search) || m.Email.Contains(search) || m.RA.ToString().Contains(search));
 
             var totalCount = await query.CountAsync();
             if (pageSize == 0) pageSize = totalCount;
             var pageRange = (int)Math.Ceiling(totalCount / (decimal)pageSize);
 
             var result = await query
-                    .OrderBy(s => s.RA)
+                    .OrderBy(s => s.Name)
                     .Skip(pageSize * (page - 1))
                     .Take(pageSize)
                     .ToListAsync();
@@ -84,9 +77,11 @@ namespace Student_Portal_API.Controllers.v1.Services
                 throw new Exception("student not found");
 
             var checkEmail = await db.Students.FirstOrDefaultAsync(u => u.Email == studentRequest.Email);
-            if (checkEmail != null)
-                throw new Exception($"Email {studentRequest.Email} already in use");
-
+            if (checkEmail != null) {
+                if (checkEmail.Email == studentRequest.Email && checkEmail.IdStudent != studentRequest.IdStudent)
+                    throw new Exception($"Email already in use");
+            }
+            
             entity.Name = studentRequest.Name;            
             entity.Email = studentRequest.Email;
 
@@ -133,11 +128,15 @@ namespace Student_Portal_API.Controllers.v1.Services
 
             var checkEmail = await db.Students.FirstOrDefaultAsync(u => u.Email == studentRequest.Email);
             if (checkEmail != null)
-                throw new Exception($"Email {studentRequest.Email} already in use");
+                throw new Exception($"Email already in use");
 
             var checkCPF = await db.Students.FirstOrDefaultAsync(u => u.CPF == studentRequest.CPF);
             if (checkCPF != null)
                 throw new Exception($"CPF already in use");
+
+            var checkRA = await db.Students.FirstOrDefaultAsync(u => u.RA == studentRequest.RA);
+            if (checkRA != null)
+                throw new Exception($"RA already in use");
 
             var student = new Students()
             {                
@@ -145,6 +144,7 @@ namespace Student_Portal_API.Controllers.v1.Services
                 Email = studentRequest.Email,
                 Active = studentRequest.Active,
                 CPF = studentRequest.CPF,
+                RA = studentRequest.RA,
             };
 
             await db.Students.AddAsync(student);
